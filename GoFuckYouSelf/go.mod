@@ -1,4 +1,4 @@
-module github.com/Andyyyy64/ReadSomeBookBitch
+module github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf
 
 go 1.21.0
 
