@@ -1,14 +1,16 @@
 package main
 
 import (
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/api/rest"
 	"github.com/gin-gonic/gin"
-	"github.com/Andyyyy64/ReadSomeBookBitch/sa-ba-/api/rest/routes"	
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
 	r := gin.Default()
 
 	rest.Routes(r)
 
-	router.Run(":8080")
+	r.Run(":8080")
 }

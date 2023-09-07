@@ -1,10 +1,10 @@
 package rest
 
 import (
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/database"
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/models"
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/pkg/auth"
 	"github.com/gin-gonic/gin"
-	"github.com/Andyyyy64/ReadSomeBookBitch/sa-ba-/internal/database"
-	"github.com/Andyyyy64/ReadSomeBookBitch/sa-ba-/internal/models"
-	"github.com/Andyyyy64/ReadSomeBookBitch/sa-ba-/pkg/auth"
 )
 
 func RegisterUser(c *gin.Context) {
@@ -22,7 +22,7 @@ func RegisterUser(c *gin.Context) {
 	}
 	user.Password = hashedPassword
 
-	if err != db.Create(&user).Error; err != nil {
+	if err := db.Create(&user).Error; err != nil {
 		c.JSON(500, gin.H{
 			"message": "Failed to create user!",
 		})
@@ -31,6 +31,6 @@ func RegisterUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": "User created successfully!",
-		"user": user,
+		"user":    user,
 	})
 }
