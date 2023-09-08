@@ -1,9 +1,12 @@
 package rest
 
 import (
+	"strconv"
+
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/database"
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/models"
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/pkg/auth"
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/pkg/books"
 	"github.com/gin-gonic/gin"
 )
 
@@ -49,7 +52,7 @@ func LoginUser(c *gin.Context) {
 	}
 
 	db := database.ConnectDB()
-	user, token, err := auth.LoginUser(db,loginInfo.Email,loginInfo.Password)
+	user, token, err := auth.LoginUser(db, loginInfo.Email, loginInfo.Password)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"message": "Authentication failed",
@@ -59,7 +62,44 @@ func LoginUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": "Login successful",
-		"user": user,
-		"token": token,
+		"user":    user,
+		"token":   token,
 	})
+}
+
+func AddBook(c *gin.Context) {
+	var bookDetails models.Books
+	var categoryStr string
+
+	c.BindJSON(&bookDetails)
+	categoryStr = c.Query("category_id")
+	categoryID, err := strconv.Atoi(categoryStr)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Invalid category ID",
+		})
+		return
+	}
+
+	token := c.Request.Header.Get("Authorization")
+
+	user, err := auth.GetUserFromToken(token)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Invalid token",
+		})
+		return
+	}
+
+	if err := books.AddBook(*user, bookDetails, categoryID); err != nil {
+		c.JSON(500, gin.H{
+			"message": "Failed to add book",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "Book added successfully",
+	})
+
 }

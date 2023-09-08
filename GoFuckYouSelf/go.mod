@@ -9,7 +9,10 @@ require (
 	gorm.io/gorm v1.25.4
 )
 
-require github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/gin-contrib/cors v1.4.0 // indirect
+)
 
 require (
 	github.com/bytedance/sonic v1.10.0 // indirect

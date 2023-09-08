@@ -4,11 +4,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/database"
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/models"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-
 )
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
@@ -47,6 +47,19 @@ func ValidateToken(tokenStr string) (*jwt.Token, error) {
 	return token, nil
 }
 
+func GetUserFromToken(tokenStr string) (*models.User, error) {
+	token, err := ValidateToken(tokenStr)
+	if err != nil {
+		return nil, err
+	}
+	claims := token.Claims.(*jwt.StandardClaims)
+	var user models.User
+	db := database.ConnectDB()
+	if err := db.Where("username = ?", claims.Subject).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
 
 func LoginUser(db *gorm.DB, email, password string) (*models.User, string, error) {
 	var user models.User
