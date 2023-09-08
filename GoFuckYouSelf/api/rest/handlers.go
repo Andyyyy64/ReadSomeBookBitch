@@ -34,3 +34,32 @@ func RegisterUser(c *gin.Context) {
 		"user":    user,
 	})
 }
+
+func LoginUser(c *gin.Context) {
+	var loginInfo struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.BindJSON(&loginInfo); err != nil {
+		c.JSON(400, gin.H{
+			"message": "Invalid input data",
+		})
+		return
+	}
+
+	db := database.ConnectDB()
+	user, token, err := auth.LoginUser(db,loginInfo.Email,loginInfo.Password)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Authentication failed",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "Login successful",
+		"user": user,
+		"token": token,
+	})
+}

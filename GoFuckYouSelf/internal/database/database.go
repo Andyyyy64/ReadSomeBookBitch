@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/models"
@@ -18,7 +17,6 @@ func ConnectDB() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		fmt.Print(os.Getenv("DB_USER") + "this tha bitch cord")
 		panic("tf you doing bitch")
 	}
 

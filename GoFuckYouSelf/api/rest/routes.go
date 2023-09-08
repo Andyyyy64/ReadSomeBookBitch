@@ -6,4 +6,5 @@ import (
 
 func Routes(router *gin.Engine) {
 	router.POST("/register", RegisterUser)
+	router.POST("/login", LoginUser)
 }

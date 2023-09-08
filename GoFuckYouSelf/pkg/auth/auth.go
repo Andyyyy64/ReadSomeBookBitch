@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
 )
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
@@ -45,6 +46,7 @@ func ValidateToken(tokenStr string) (*jwt.Token, error) {
 	}
 	return token, nil
 }
+
 
 func LoginUser(db *gorm.DB, email, password string) (*models.User, string, error) {
 	var user models.User
