@@ -72,7 +72,10 @@ func AddBook(c *gin.Context) {
 	var categoryStr string
 
 	c.BindJSON(&bookDetails)
+
 	categoryStr = c.Query("category_id")
+	userStr := c.Query("user_id")
+	// convert string to int
 	categoryID, err := strconv.Atoi(categoryStr)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -80,10 +83,15 @@ func AddBook(c *gin.Context) {
 		})
 		return
 	}
+	userID, err := strconv.Atoi(userStr)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Invalid user ID",
+		})
+		return
+	}
 
-	token := c.Request.Header.Get("Authorization")
-
-	user, err := auth.GetUserFromToken(token)
+	user, err := auth.GetUserFromUserId(uint(userID))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"message": "Invalid token",

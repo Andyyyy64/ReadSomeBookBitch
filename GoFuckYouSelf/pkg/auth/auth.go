@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -49,6 +50,9 @@ func ValidateToken(tokenStr string) (*jwt.Token, error) {
 
 func GetUserFromToken(tokenStr string) (*models.User, error) {
 	token, err := ValidateToken(tokenStr)
+	fmt.Println("token")
+	fmt.Println(token)
+	fmt.Println(tokenStr)
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +60,15 @@ func GetUserFromToken(tokenStr string) (*models.User, error) {
 	var user models.User
 	db := database.ConnectDB()
 	if err := db.Where("username = ?", claims.Subject).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func GetUserFromUserId(userId uint) (*models.User, error) {
+	var user models.User
+	db := database.ConnectDB()
+	if err := db.Where("id = ?", userId).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

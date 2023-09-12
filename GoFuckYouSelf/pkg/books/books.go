@@ -7,8 +7,8 @@ import (
 
 func AddBook(user models.User, bookDetails models.Books, categoryID int) error {
 	var db = database.ConnectDB()
+	bookDetails.UserID = user.ID
 	if categoryID == 0 {
-		bookDetails.UserID = user.ID
 		if err := db.Create(&bookDetails).Error; err != nil {
 			return err
 		}
