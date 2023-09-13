@@ -98,7 +98,6 @@ func AddBook(c *gin.Context) {
 		})
 		return
 	}
-
 	if err := books.AddBook(*user, bookDetails, categoryID); err != nil {
 		c.JSON(500, gin.H{
 			"message": "Failed to add book",

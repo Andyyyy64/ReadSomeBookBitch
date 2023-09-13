@@ -48,7 +48,7 @@ export const App = () => {
 
   const [email, setEmail] = useState<string>('')
   const [username, setUsername] = useState<string>('')
-  const [categoryID, setCategoryID] = useState<number>(0); // use to locate the current directy. when is 0, it means ur in root directy
+  const [categoryID, setCategoryID] = useState<number>(1); // use to locate the current directy. when is 1, it means ur in root directy
 
   const [token, setToken] = useState<string>(localStorage.getItem('token') ?? '')
   const [user, setUser] = useState<User | undefined>(JSON.parse(localStorage.getItem('user') ?? "{}"))
@@ -59,7 +59,7 @@ export const App = () => {
     setColorMode(colorMode === ColorMode.Light ? ColorMode.Dark : ColorMode.Light);
   }
 
-  const addBook = async (title: string, description: string, rate: number) => {
+  const addBook = async (title: string, author: string, description: string, rate: number) => {
     const category_id = categoryID == 0 ? null : categoryID;
     if (user == undefined) {
       setLineData(prev => [...prev, <TerminalOutput>You are not login. use login command to login</TerminalOutput>])
@@ -68,6 +68,7 @@ export const App = () => {
     try {
       const res: AxiosResponse = await axios.post(`http://localhostL8080/add-book?category_id=${categoryID}`, {
         title,
+        author,
         description,
         rate,
         category_id,
@@ -148,6 +149,14 @@ export const App = () => {
       }
     } else if (input.toLocaleLowerCase().trim() === 'addbook') {
 
+    } else if (input.toLocaleLowerCase().trim() === 'mkdir') {
+      // add category
+    } else if (input.toLocaleLowerCase().trim() === 'ls') {
+      // show all books and categories in current directory
+    } else if (input.toLocaleLowerCase().trim() === 'cd') {
+      // change directory to the given category(change categoryID)
+    } else if (input.toLocaleLowerCase().trim() === 'rm') {
+      // remove book or category
     }
 
     // #1
