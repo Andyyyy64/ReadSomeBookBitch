@@ -74,7 +74,6 @@ func AddBook(c *gin.Context) {
 	c.BindJSON(&bookDetails)
 
 	categoryStr = c.Query("category_id")
-	userStr := c.Query("user_id")
 	// convert string to int
 	categoryID, err := strconv.Atoi(categoryStr)
 	if err != nil {
@@ -83,15 +82,10 @@ func AddBook(c *gin.Context) {
 		})
 		return
 	}
-	userID, err := strconv.Atoi(userStr)
-	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Invalid user ID",
-		})
-		return
-	}
 
-	user, err := auth.GetUserFromUserId(uint(userID))
+	token := c.Request.Header.Get("Authorization")
+
+	user, err := auth.GetUserFromToken(token)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"message": "Invalid token",
@@ -109,4 +103,52 @@ func AddBook(c *gin.Context) {
 		"message": "Book added successfully",
 	})
 
+}
+
+func AddCategory(c *gin.Context) {
+	var categoryDetails models.Category
+
+	c.BindJSON(&categoryDetails)
+
+	token := c.Request.Header.Get("Authorization")
+
+	user, err := auth.GetUserFromToken(token)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message" : "Invalid token",
+		})
+		return
+	}
+	if err := books.AddCategory(*user, categoryDetails); err != nil {
+		return c.JSON(500, gin.H{
+			"message" : "Failed to add category",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message" : "Category added successfully",
+	})
+}
+
+func GetAllUserInfo(c *gin.Context) {
+	token := c.Requse.Header.Get("Authorization")
+
+	user, err := auth.GetUserFromToken(token)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message" : "Invaild token",
+		})
+		return
+	}
+	if err := books.GetAllUserInfo(*user); err != nil {
+		return c.JSON(500, gin.H{
+			"message" : "Failed to get you",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message" : "successfully get you!"
+	})
 }

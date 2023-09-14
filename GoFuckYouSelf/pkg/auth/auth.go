@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"strings"
 
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/database"
 	"github.com/Andyyyy64/ReadSomeBookBitch/GoFuckYouSelf/internal/models"
@@ -49,6 +50,11 @@ func ValidateToken(tokenStr string) (*jwt.Token, error) {
 }
 
 func GetUserFromToken(tokenStr string) (*models.User, error) {
+
+	if len(tokenStr) > 7 && strings.ToUpper(tokenStr[:7]) == "BEARER " {
+		tokenStr = tokenStr[7:]
+	}
+
 	token, err := ValidateToken(tokenStr)
 	fmt.Println("token")
 	fmt.Println(token)
